@@ -8,7 +8,7 @@ from django.conf.urls import handler404
 
 from django.contrib.auth.models import User
 from .registrationForm import RegistrationForm
-from.loginForm import LoginForm
+from .loginForm import LoginForm
 
 # Create your views here.
 

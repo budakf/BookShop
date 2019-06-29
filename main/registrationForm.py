@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 
 class RegistrationForm(forms.Form):
-    first_name= forms.CharField()
+    first_name= forms.CharField(widget=forms.TextInput(attrs={'autofocus': 'autofocus'}))
     last_name= forms.CharField()
     username= forms.CharField()
     email= forms.EmailField(required=True)
