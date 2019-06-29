@@ -1,0 +1,38 @@
+<html>  
+    <head>
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+        <!-- Compiled and minified JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        
+    </head>
+
+    <body>
+        <nav>
+            <div class="nav-wrapper">
+                <a href="/" class="brand-logo">Book Shop</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    {% if user.is_authenticated %}
+                        <li><a href="/account">{{user.username}}</a></li>
+                        <li><a href="/logout">Logout</a></li>    
+                    {% else %}    
+                        <li><a href="/register">Register</a></li>
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/about">About</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
+        {% include 'messages.html' %}  
+
+
+    </body>
+
+    {% block content %}
+    {% endblock content %}
+
+    <script>M.AutoInit();</script>
+
+ </html>   
