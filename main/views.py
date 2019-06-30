@@ -9,11 +9,14 @@ from django.conf.urls import handler404
 from django.contrib.auth.models import User
 from .registrationForm import RegistrationForm
 from .loginForm import LoginForm
+from .models import Book
 
 # Create your views here.
 
 def homePage(request):
-    return render(request, "home.html")
+    books = Book.objects.all()
+    print(books[0].book_writer.all())
+    return render(request, "home.html",{"books":books})
 
 def register(request):
     if request.method == "POST":
@@ -85,7 +88,6 @@ def about(request):
 
 
 def handler404(request):
-    print("sfbfdsb")
     response = render_to_response('404.html', {},
                               context_instance=RequestContext(request))
     response.status_code = 404
