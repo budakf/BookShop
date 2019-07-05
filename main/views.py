@@ -108,14 +108,15 @@ def delete_book_from_cart(request):
         book_name = request_data.get("book_name")
 
         cart = Cart.objects.filter(owner__username=request.user)[0]
-        Book.objects.filter(book_name=book_name).delete()
+        book = Book.objects.filter(book_name=book_name)[0]
+        cart.books.remove(book)
         
         books = cart.books.all()
         total_fee = 0
         for book in books:
             total_fee += book.book_price
 
-        return render( request, "cart.html", {"cart": cart , "total_fee": total_fee} )
+        return redirect("/cart")  
 
     else:
         return redirect("/notFound")        
