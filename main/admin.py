@@ -13,10 +13,20 @@ class BookAdmin(admin.ModelAdmin):
     list_display_links = list_display
 
 
-
 class CartAdmin(admin.ModelAdmin):
-    list_display = ['total_fee']
+    list_display = ["getUsername", "getBooks"]
+    list_display_links = ["getUsername", "getBooks"]
 
+    def getUsername(self, object):
+        return object.owner.username
+
+
+    def getBooks(self, object):
+        if object.books.exists():
+            return object.books.all()[0].book_name + " ..."
+    
+    getUsername.short_description = "Username"
+    getBooks.short_description = "Books"
 
 
 admin.site.register(Book, BookAdmin)

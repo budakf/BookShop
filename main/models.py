@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
+from django.utils.timezone import now
 
 # Create your models here.
 
@@ -14,7 +14,7 @@ class Writer(models.Model):
 class Book(models.Model):
     book_name = models.CharField(max_length=80)
     book_writer = models.ManyToManyField(Writer,related_name='writers')
-    book_published_date = models.DateField(default=datetime.now())
+    book_published_date = models.DateField(default=now())
     book_price = models.DecimalField(max_digits=6, decimal_places=3)
     book_detail = models.TextField()
 
@@ -24,11 +24,8 @@ class Book(models.Model):
 
 class Cart(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, default=1)
-    book_number = models.IntegerField()
-    total_fee = models.DecimalField(max_digits=10, decimal_places=3)
-
+    books = models.ManyToManyField(Book, related_name='books')
 
     def __str__(self):
-        return self.owner
-
+        return self.owner.username
 

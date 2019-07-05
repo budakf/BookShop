@@ -9,13 +9,13 @@ from django.conf.urls import handler404
 from django.contrib.auth.models import User
 from .registrationForm import RegistrationForm
 from .loginForm import LoginForm
-from .models import Book
+from .models import Book, Cart
 
 # Create your views here.
 
 def homePage(request):
     books = Book.objects.all()
-    print(books[0].book_writer.all())
+    # print(books[0].book_writer.all())
     return render(request, "home.html",{"books":books})
 
 def register(request):
@@ -91,3 +91,32 @@ def handler404(request):
     response = render_to_response('404.html', {},
                               context_instance=RequestContext(request))
     response.status_code = 404
+
+def cart(request):
+    cart = Cart.objects.filter(owner__username=request.user)[0]
+    books = cart.books.all()
+    total_fee = 0
+    for book in books:
+        total_fee += book.book_price
+    # print(total_fee)
+    return render( request, "cart.html", {"cart": cart , "total_fee": total_fee} )
+
+
+def delete_book_from_cart(request):
+    if request.method == "POST":
+        request_data = request.POST
+        book_name = request_data.get("book_name")
+
+        cart = Cart.objects.filter(owner__username=request.user)[0]
+        Book.objects.filter(book_name=book_name).delete()
+        
+        books = cart.books.all()
+        total_fee = 0
+        for book in books:
+            total_fee += book.book_price
+
+        return render( request, "cart.html", {"cart": cart , "total_fee": total_fee} )
+
+    else:
+        return redirect("/notFound")        
+
