@@ -16,11 +16,10 @@
                     {{book.book_price}} TL
                 </div>
 
-                <form action="/addBookFromCart" method="POST">
+                <form action="/deleteBookFromCart" method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="book_name" value="{{  book.book_name }}">
-                    <button type="submit" class="btn white black-text"> Add</button>
-                    <button type="submit" class="btn white black-text"  formaction="/deleteBookFromCart">Remove</button>
+                    <button type="submit" class="btn white black-text">Remove</button>
                 </form>  
 
             </div>

@@ -12,7 +12,11 @@
 					{{book.book_price}} TL
 				</div>
 				{% if user.is_authenticated %}
-					<a href="#">Add to Cart</a>
+					<form action="/addBookToCart" method="POST">
+						{% csrf_token %}
+						<input type="hidden" name="book_name" value="{{  book.book_name }}">
+						<button type="submit" class="btn white black-text">Add</button>
+                	</form>  
 				{% endif %}
 			</div>
         </div>

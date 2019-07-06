@@ -29,6 +29,7 @@ urlpatterns = [
     path('about', views.about, name="about"),
     path('cart', views.cart, name="cart"),
     path('deleteBookFromCart', views.delete_book_from_cart, name="delete_book_from_cart"),
-    
+    path('addBookToCart', views.add_book_to_cart, name="add_book_to_cart"),
+
 ]
 

@@ -102,6 +102,18 @@ def cart(request):
     return render( request, "cart.html", {"cart": cart , "total_fee": total_fee} )
 
 
+def add_book_to_cart(request):
+    if request.method == "POST":
+        request_data = request.POST
+        book_name = request_data.get("book_name")
+
+        cart = Cart.objects.filter(owner__username=request.user)[0]
+        book = Book.objects.filter(book_name=book_name)[0]
+        cart.books.add(book) 
+
+        messages.info(request, f"{book.book_name} added to cart")
+        return redirect('homePage')
+
 def delete_book_from_cart(request):
     if request.method == "POST":
         request_data = request.POST
@@ -113,9 +125,10 @@ def delete_book_from_cart(request):
         
         books = cart.books.all()
         total_fee = 0
-        for book in books:
-            total_fee += book.book_price
+        for b in books:
+            total_fee += b.book_price
 
+        messages.info(request, f"{book.book_name} removed from cart")
         return redirect("/cart")  
 
     else:
