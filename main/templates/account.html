@@ -1,0 +1,28 @@
+{% extends 'header.html' %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col s4">
+        <div class="card card-panel">
+            <div class="card-content">
+                <span class="card-title">Username: {{account.username}}</span> </br>
+                Email: {{account.email}}
+                <a href="/editEmail"> Edit </a> </br></br>
+                {% if edit_email %} 
+                    <form action="/editEmail" method="POST">
+						{% csrf_token %}
+						<input type="email" name="new_email" value=" " required>
+						<button type="submit" class="btn white black-text">Edit</button>
+                	</form>  
+                {% endif %}
+                Last Login: {{account.last_login}} </br></br></br>
+                <a href="/cart"> My Cart </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}
