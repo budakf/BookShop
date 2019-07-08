@@ -6,8 +6,17 @@
     <div class="col s4">
         <div class="card card-panel">
             <div class="card-content">
+                <p style="font-size:80%">Last Login: {{user.last_login}} </br></br></p>
                 <span class="card-title">Username: {{user.username}}</span> </br>
-                Phone: {{customer.phone}} </br></br>
+                Phone: {{customer.phone}} 
+                <a href="/editPhone"> Edit </a> </br></br>
+                {% if edit_phone %} 
+                    <form action="/editPhone" method="POST">
+						{% csrf_token %}
+						<input type="number" name="new_phone" value=" " required>
+						<button type="submit" class="btn white black-text">Edit</button>
+                	</form>  
+                {% endif %}
                 Email: {{user.email}}
                 <a href="/editEmail"> Edit </a> </br></br>
                 {% if edit_email %} 
@@ -17,8 +26,17 @@
 						<button type="submit" class="btn white black-text">Edit</button>
                 	</form>  
                 {% endif %}
-                Last Login: {{user.last_login}} </br></br></br>
-                <a href="/cart"> My Cart </a>
+                Address: {{customer.address}}
+                <a href="/editAddress"> Edit </a> </br></br>
+                {% if edit_address %} 
+                    <form action="/editAddress" method="POST">
+						{% csrf_token %}
+						<input type="text" name="new_address" value=" " required>
+						<button type="submit" class="btn white black-text">Edit</button>
+                	</form>  
+                {% endif %}
+                
+                <a href="/cart"> Go to My Cart </a>
             </div>
         </div>
     </div>

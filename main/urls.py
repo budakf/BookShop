@@ -32,6 +32,8 @@ urlpatterns = [
     path('addBookToCart', views.add_book_to_cart, name="add_book_to_cart"),
     path('account', views.account, name="account"),
     path('editEmail', views.edit_email, name="edit_email"),
+    path('editPhone', views.edit_phone, name="edit_phone"),
+    path('editAddress', views.edit_address, name="edit_address"),
 
 ]
 

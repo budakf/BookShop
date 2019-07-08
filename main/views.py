@@ -187,3 +187,41 @@ def edit_email(request):
         account = User.objects.filter(username=request.user)[0]
         edit = True
         return render(request, "account.html", {"account": account, "edit_email": edit})
+
+def edit_phone(request):
+    if request.method == "POST":
+        new_phone = request.POST.get("new_phone")
+        customer = Customer.objects.get(user__username=request.user)
+        if new_phone == customer.phone:
+            messages.error(request, f"Please new phone")
+        else:
+            customer.phone = new_phone
+            customer.save()
+            messages.success(request, f"Edited phone successfully")
+
+        return redirect("/account")
+    
+    else:
+        account = Customer.objects.get(user__username=request.user)
+        edit = True
+        return render(request, "account.html", {"account": account, "edit_phone": edit})
+            
+
+def edit_address(request):
+    if request.method == "POST":
+        new_address = request.POST.get("new_address")
+        customer = Customer.objects.get(user__username=request.user)
+        if new_address == customer.address:
+            messages.error(request, f"Please new address")
+        else:
+            customer.address = new_address
+            customer.save()
+            messages.success(request, f"Edited address successfully")
+
+        return redirect("/account")
+    
+    else:
+        account = Customer.objects.get(user__username=request.user)
+        edit = True
+        return render(request, "account.html", {"account": account, "edit_address": edit})
+      
