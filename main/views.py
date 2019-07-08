@@ -8,7 +8,7 @@ from django.conf.urls import handler404
 from django.contrib.auth.models import User
 from .registrationForm import RegistrationForm
 from .loginForm import LoginForm
-from .models import Book, Cart
+from .models import Book, Cart, Customer
 
 # Create your views here.
 
@@ -40,7 +40,10 @@ def register(request):
             )
             user.first_name = form.cleaned_data["first_name"] 
             user.last_name = form.cleaned_data["last_name"] 
-            user.save() 
+            user.save()
+            customer = Customer()
+            customer.user = user
+            customer.save()
             messages.success(request, f"New User Created")
             messages.success(request, f"Lets Login")
             return redirect("/login")
@@ -54,7 +57,11 @@ def register(request):
 
 
 def login_request(request):
-    if request.method == "POST":
+    if request.user.is_authenticated:
+        messages.info(request, f"You have already logged in")
+        return redirect("/")
+        
+    elif request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data["username"]
@@ -67,10 +74,6 @@ def login_request(request):
             else:
                 messages.error(request,f"Username or Password Wrong")
                 return redirect("/login",{'form':form})
-    
-    elif request.user.is_authenticated:
-        messages.info(request, f"You have already logged in")
-        return redirect("/")
 
     else:
         print(request.GET)
@@ -95,12 +98,17 @@ def handler404(request):
 
 
 def cart(request):
-    cart = Cart.objects.filter(owner__username=request.user)[0]
-    books = cart.books.all()
-    total_fee = 0
-    for book in books:
-        total_fee += book.book_price
+    try:
+        cart = Cart.objects.get(owner__username=request.user)
+    except:
+        cart = None
     
+    total_fee = 0
+    if cart is not None:
+        books = cart.books.all()
+        for book in books:
+            total_fee += book.book_price
+        
     return render( request, "cart.html", {"cart": cart , "total_fee": total_fee} )
 
 
@@ -108,12 +116,19 @@ def add_book_to_cart(request):
     if request.method == "POST":
         request_data = request.POST
         book_name = request_data.get("book_name")
-
-        cart = Cart.objects.filter(owner__username=request.user)[0]
-        book = Book.objects.filter(book_name=book_name)[0]
-        cart.books.add(book) 
-
-        messages.info(request, f"{book.book_name} added to cart")
+        try:
+            cart = Cart.objects.get(owner__username=request.user)
+        except:
+            cart = None
+        if cart is not None:
+            try:   
+                book = Book.objects.get(book_name=book_name)
+            except:    
+                book = None
+            if book is not None:
+                cart.books.add(book) 
+                messages.info(request, f"{book.book_name} added to cart")
+    
         return redirect('homePage')
 
     else:
@@ -142,8 +157,13 @@ def delete_book_from_cart(request):
 
 
 def account(request):
-    account = User.objects.filter(username=request.user)[0]
-    return render(request, "account.html",{"account": account})
+    try:
+        user = User.objects.get(username=request.user)
+        customer = Customer.objects.get(user__username=user)
+    except:
+        account = None
+            
+    return render(request, "account.html", {"customer": customer} )
 
 
 def edit_email(request):
@@ -160,9 +180,10 @@ def edit_email(request):
             user.email = new_email
             user.save()
             messages.success(request, f"Edited email successfully")
-            return redirect("/account")
+        
+        return redirect("/account")
  
     else:
         account = User.objects.filter(username=request.user)[0]
-        edit_email = True
-        return render(request, "account.html", {"account": account, "edit_email": edit_email})
+        edit = True
+        return render(request, "account.html", {"account": account, "edit_email": edit})

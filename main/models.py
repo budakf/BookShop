@@ -4,6 +4,14 @@ from django.utils.timezone import now
 
 # Create your models here.
 
+class Customer(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
+    phone = models.CharField(max_length=15)
+    address = models.TextField()
+
+    def __str__(self):
+        return self.user.username
+
 class Writer(models.Model):
     first_name = models.CharField(max_length=80)
     last_name  = models.CharField(max_length=80)
