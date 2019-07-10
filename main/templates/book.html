@@ -1,28 +1,28 @@
 <div class="container">
 
-  <div class="row">
-    {% for book in  books%}
-        <div class="col s4">
-			<div class="card card-panel">
-				<div class="card-content">
-					<p style="font-size:70%">{{book.book_published_date}}</p>
-					<span class="card-title">{{book.book_name}}</span>
-					{{book.book_writer.all|join:" "}} </br>
-					{{book.book_detail}} </br>
-					{{book.book_price}} TL
+	<div class="row">
+		{% for book in  books%}
+			<div class="col s3">
+				<div class="card card-panel">
+					<div class="card-content">
+						<p style="font-size:70%">{{book.book_published_date}}</p>
+						<span class="card-title">{{book.book_name}}</span>
+						{{book.book_writer.all|join:" "}} </br>
+						{{book.book_detail}} </br>
+						{{book.book_price}} TL
+					</div>
+					{% if user.is_authenticated %}
+						<form action="/addBookToCart" method="POST">
+							{% csrf_token %}
+							<input type="hidden" name="book_name" value="{{  book.book_name }}">
+							<button type="submit" class="btn white black-text">Add</button>
+						</form>  
+					{% endif %}
 				</div>
-				{% if user.is_authenticated %}
-					<form action="/addBookToCart" method="POST">
-						{% csrf_token %}
-						<input type="hidden" name="book_name" value="{{  book.book_name }}">
-						<button type="submit" class="btn white black-text">Add</button>
-                	</form>  
-				{% endif %}
 			</div>
-        </div>
-    {% endfor %}    
+		{% endfor %}    
 
-  </div>
+	</div>
 
 <div>
           
